@@ -21,6 +21,8 @@ public class OrderedLinkedListRQ implements Runqueue {
     }  // end of OrderedLinkedList()
     
     @Override
+    // Bug with head - smallest EN so far is never set to head, the only time head is set is when the list is empty. 
+    
     public void enqueue(String procLabel, int vt) {
     	Proc newProc = new Proc(procLabel, vt);
     	Proc currProc = this.head;
@@ -36,7 +38,7 @@ public class OrderedLinkedListRQ implements Runqueue {
         }
         // otherwise, add node to list in order of vt value.
         else {
-        	for (int i = 0; i <= this.length; i++) {
+        	for (int i = 0; i < this.length; i++) {
         		//1. If there is an equivilent VT in the array, find its highest index. Case 1.
         		if (currProc.getVT() == newProc.getVT()) {
         			highestEqualIndex = i;
@@ -73,7 +75,14 @@ public class OrderedLinkedListRQ implements Runqueue {
         	// There are no equivalent VT values but the new VT value is not the largest so
 			// far.
         	case 2:
-        		// Add new proc before the element at greaterIndex (first element.VT in the
+        		//If newProc has the smallest VT so far, it's the new head.
+        		if (firstGreaterIndex == 0) {
+        			newProc.setNextProc(this.head);
+        			this.head = newProc;
+        			this.length += 1;
+        			break;
+        		}
+        		// Else, Add new proc before the element at greaterIndex (first element.VT in the
 				// array which is larger than newProc.VT).
         		currProc = this.head;
         		for (int i = 0; i < firstGreaterIndex - 1; i++) {
@@ -88,7 +97,7 @@ public class OrderedLinkedListRQ implements Runqueue {
 			// of the array.
         	case 3:
         		currProc = this.head;
-        		for (int i = 0; i <= this.length; i++) {
+        		for (int i = 0; i < this.length - 1; i++) {
         			currProc = currProc.getNextProc();
         		}
         		currProc.setNextProc(newProc);
@@ -101,6 +110,12 @@ public class OrderedLinkedListRQ implements Runqueue {
         		break;
         	}
         }
+    	
+    	currProc = this.head;
+    	for (int i = 0; i < this.length; i++) {
+			System.out.println(currProc.getProcLabel() + " " + currProc.getVT());
+    		currProc = currProc.getNextProc();
+		}
 
     } // end of enqueue()
 
