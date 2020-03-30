@@ -1,5 +1,6 @@
 import java.io.PrintWriter;
 import java.lang.String;
+import java.util.Iterator;
 
 /**
  * Implementation of the run queue interface using an Ordered Link List.
@@ -10,19 +11,96 @@ import java.lang.String;
  * @author Sajal Halder, Minyi Li, Jeffrey Chan.
  */
 public class OrderedLinkedListRQ implements Runqueue {
-
-    /**
-     * Constructs empty linked list
-     */
+	
+	private Proc head;
+	private int length;
+	
     public OrderedLinkedListRQ() {
-        // Implement me
-
+    	head = null;
+    	length = 0;
     }  // end of OrderedLinkedList()
-
-
+    
     @Override
     public void enqueue(String procLabel, int vt) {
-        // Implement me
+    	Proc newProc = new Proc(procLabel, vt);
+    	Proc currProc = this.head;
+    	int highestEqualIndex = 0;
+    	int firstGreaterIndex = 0;
+    	boolean equivalent = false;
+    	int switchCase = 4;
+    	
+    	//If head is empty, then list is empty and newProc is the new head.
+    	if (head == null) {
+            head = newProc;
+            this.length += 1;
+        }
+        // otherwise, add node to list in order of vt value.
+        else {
+        	for (int i = 0; i <= this.length; i++) {
+        		//1. If there is an equivilent VT in the array, find its highest index. Case 1.
+        		if (currProc.getVT() == newProc.getVT()) {
+        			highestEqualIndex = i;
+        			equivalent = true;
+        			switchCase = 1;
+        		//2. If not, find the index of the first VT in the array which is larger than
+        		// newProc.VT and break. Case 2.
+        		} else if (currProc.getVT() > newProc.getVT()) {
+        			firstGreaterIndex = i;
+        			switchCase = 2;
+        			break;
+        		//3. Else new Proc must have the largest VT so far. Case 3.
+        		} else {
+        			if (!equivalent) {
+						switchCase = 3;
+					}
+        		}
+        		currProc = currProc.getNextProc();
+        	}
+        	
+        	switch (switchCase) {
+        	// There is one or more equivalent VT values in the array - new entry needs to
+			// go behind the largest one.
+        	case 1:
+        		currProc = this.head;
+        		for (int i = 0; i < highestEqualIndex; i++) {
+        			currProc = currProc.getNextProc();
+        		}
+        		newProc.setNextProc(currProc.getNextProc());
+        		currProc.setNextProc(newProc);
+        		this.length += 1;
+        		break;
+        	
+        	// There are no equivalent VT values but the new VT value is not the largest so
+			// far.
+        	case 2:
+        		// Add new proc before the element at greaterIndex (first element.VT in the
+				// array which is larger than newProc.VT).
+        		currProc = this.head;
+        		for (int i = 0; i < firstGreaterIndex - 1; i++) {
+        			currProc = currProc.getNextProc();
+        		}
+        		newProc.setNextProc(currProc.getNextProc());
+        		currProc.setNextProc(newProc);
+        		this.length += 1;
+        		break;
+        		
+        	// The VT value of the new proc is the largest so far. New proc goes at the end
+			// of the array.
+        	case 3:
+        		currProc = this.head;
+        		for (int i = 0; i <= this.length; i++) {
+        			currProc = currProc.getNextProc();
+        		}
+        		currProc.setNextProc(newProc);
+        		this.length += 1;
+        		break;
+        	
+        	//Error case.
+        	case 4:
+        		System.out.println("Error - no case match in OrderedLinkedListRQ switch statement.");
+        		break;
+        	}
+        }
 
     } // end of enqueue()
 
@@ -72,5 +150,6 @@ public class OrderedLinkedListRQ implements Runqueue {
         //Implement me
 
     } // end of printAllProcess()
+
 
 } // end of class OrderedLinkedListRQ

@@ -1,8 +1,12 @@
 
 public class Proc {
 	
+	//General
 	private String procLabel;
 	private int vt;
+	
+	//For LinkedList implimentation
+	private Proc nextProc;
 	
 	public Proc(String procLabel, int vt) {
 		this.procLabel = procLabel;
@@ -23,6 +27,16 @@ public class Proc {
 	
 	public int getVT() {
 		return this.vt;
-	}	
+	}
+	
+	//For LinkedList implimentation
+	public Proc getNextProc() {
+		return this.nextProc;
+	}
+	
+	//For LinkedList implimentation
+	public void setNextProc(Proc nextProc) {
+		this.nextProc = nextProc;
+	}
 
 }

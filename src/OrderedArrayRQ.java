@@ -160,10 +160,8 @@ public class OrderedArrayRQ implements Runqueue {
 
 	@Override
 	public int precedingProcessTime(String procLabel) {
-
 		boolean procCheck = false;
 		int runningTotal = 0;
-
 		for (int i = 0; i < this.procArray.length; i++) {
 			if (this.procArray[i].getProcLabel().equals(procLabel)) {
 				procCheck = true;
@@ -181,7 +179,6 @@ public class OrderedArrayRQ implements Runqueue {
 
 	@Override
 	public int succeedingProcessTime(String procLabel) {
-
 		boolean procCheck = false;
 		int runningTotal = 0;
 
