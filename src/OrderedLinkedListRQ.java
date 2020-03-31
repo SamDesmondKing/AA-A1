@@ -20,9 +20,7 @@ public class OrderedLinkedListRQ implements Runqueue {
     	length = 0;
     }  // end of OrderedLinkedList()
     
-    @Override
-    // Bug with head - smallest EN so far is never set to head, the only time head is set is when the list is empty. 
-    
+    @Override    
     public void enqueue(String procLabel, int vt) {
     	Proc newProc = new Proc(procLabel, vt);
     	Proc currProc = this.head;
@@ -110,13 +108,6 @@ public class OrderedLinkedListRQ implements Runqueue {
         		break;
         	}
         }
-    	
-    	currProc = this.head;
-    	for (int i = 0; i < this.length; i++) {
-			System.out.println(currProc.getProcLabel() + " " + currProc.getVT());
-    		currProc = currProc.getNextProc();
-		}
-
     } // end of enqueue()
 
 
