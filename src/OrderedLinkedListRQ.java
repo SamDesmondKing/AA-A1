@@ -1,6 +1,5 @@
 import java.io.PrintWriter;
 import java.lang.String;
-import java.util.Iterator;
 
 /**
  * Implementation of the run queue interface using an Ordered Link List.
@@ -212,7 +211,7 @@ public class OrderedLinkedListRQ implements Runqueue {
 		Proc currProc = this.head;
 		String printString = "";
 		while (currProc != null) {
-			printString += currProc.getProcLabel();
+			printString += currProc.getProcLabel() + " ";
 			currProc = currProc.getNextProc();
 		}
 		os.println(printString);
