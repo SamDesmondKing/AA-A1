@@ -27,7 +27,7 @@ public class OrderedLinkedListRQ implements Runqueue {
 		int highestEqualIndex = 0;
 		int firstGreaterIndex = 0;
 		boolean equivalent = false;
-		int switchCase = 4;
+		int switchCase = 5;
 
 		// If head is empty, then list is empty and newProc is the new head.
 		if (this.head == null) {
@@ -37,18 +37,19 @@ public class OrderedLinkedListRQ implements Runqueue {
 		// otherwise, add node to list in order of vt value.
 		else {
 			for (int i = 0; i < this.length; i++) {
+
 				// 1. If there is an equivilent VT in the array, find its highest index. Case 1.
 				if (currProc.getVT() == newProc.getVT()) {
 					highestEqualIndex = i;
 					equivalent = true;
 					switchCase = 1;
-					// 2. If not, find the index of the first VT in the array which is larger than
-					// newProc.VT and break. Case 2.
+				// 2. If not, find the index of the first VT in the array which is larger than
+				// newProc.VT and break. Case 2.
 				} else if (currProc.getVT() > newProc.getVT()) {
 					firstGreaterIndex = i;
 					switchCase = 2;
 					break;
-					// 3. Else new Proc must have the largest VT so far. Case 3.
+				// 3. Else new Proc must have the largest VT so far. Case 3.
 				} else {
 					if (!equivalent) {
 						switchCase = 3;
@@ -105,7 +106,7 @@ public class OrderedLinkedListRQ implements Runqueue {
 
 			// Error case.
 			case 4:
-				System.out.println("Error - no case match in OrderedLinkedListRQ switch statement.");
+				System.out.println("Error - switchCase never set in enqueue().");
 				break;
 			}
 		}
@@ -138,30 +139,79 @@ public class OrderedLinkedListRQ implements Runqueue {
 
 	@Override
 	public boolean removeProcess(String procLabel) {
-		// Implement me
+		Proc currProc = this.head;
+		Proc prevProc = null;
 
-		return false; // placeholder, modify this
+		// If search value is head
+		if (currProc.getProcLabel() == procLabel) {
+			this.head = currProc.getNextProc();
+			this.length--;
+			return true;
+		}
+
+		while (currProc != null) {
+			if (currProc.getProcLabel().equals(procLabel)) {
+				prevProc.setNextProc(currProc.getNextProc());
+				currProc = null;
+				this.length--;
+				return true;
+			} else {
+				prevProc = currProc;
+				currProc = currProc.getNextProc();
+			}
+		}
+		return false;
 	} // End of removeProcess()
 
 	@Override
 	public int precedingProcessTime(String procLabel) {
-		// Implement me
+		boolean procCheck = false;
+		int runningTotal = 0;
+		Proc currProc = this.head;
+		while (currProc != null) {
+			if (currProc.getProcLabel().equals(procLabel)) {
+				procCheck = true;
+				break;
+			}
+			runningTotal += currProc.getVT();
+			currProc = currProc.getNextProc();
+		}
 
-		return -1; // placeholder, modify this
+		if (procCheck) {
+			return runningTotal;
+		} else {
+			return -1;
+		}
 	} // end of precedingProcessTime()
 
 	@Override
 	public int succeedingProcessTime(String procLabel) {
-		// Implement me
+		boolean procCheck = false;
+		int runningTotal = 0;
+		Proc currProc = this.head;
 
-		return -1; // placeholder, modify this
+		while (currProc != null) {
+			if (procCheck) {
+				runningTotal += currProc.getVT();
+			}
+			if (currProc.getProcLabel().equals(procLabel)) {
+				procCheck = true;
+			}
+			currProc = currProc.getNextProc();
+		}
+
+		if (procCheck) {
+			return runningTotal;
+		} else {
+			return -1;
+		}
 	} // end of precedingProcessTime()
 
 	@Override
 	public void printAllProcesses(PrintWriter os) {
 		Proc currProc = this.head;
 		String printString = "";
-		while(currProc != null) {
+		while (currProc != null) {
 			printString += currProc.getProcLabel();
 			currProc = currProc.getNextProc();
 		}
