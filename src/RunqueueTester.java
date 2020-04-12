@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.String;
+import java.util.ArrayList;
 
 
 /**
@@ -19,6 +20,7 @@ public class RunqueueTester {
     /** Name of class, used in error messages. */
     protected static final String progName = "RunqueueTester";
 
+    private static ArrayList<Double> timeArray;
 
     /**
      * Print help/usage message.
@@ -48,6 +50,7 @@ public class RunqueueTester {
 	public static void processOperations(BufferedReader inReader, Runqueue queue, PrintWriter processOutWriter)
         throws IOException
     {
+		timeArray = new ArrayList<Double>();
         String line;
         // current line number, which reflect how many commands have been entered.
         int lineNum = 1;
@@ -78,7 +81,12 @@ public class RunqueueTester {
                                 System.err.println(lineNum + ": process run time must be non-negative.");
                             }
                             else {
+                            	//Timer here
+                            	long startTime = System.nanoTime();
                                 queue.enqueue(tokens[1], vt);
+                                long endTime = System.nanoTime();
+                                double time = ((double) (endTime - startTime)) / Math.pow(10,9);
+                                timeArray.add(time);
                             }
                         }
                         else {
@@ -170,6 +178,7 @@ public class RunqueueTester {
      */
     public static void main(String[] args) {
 
+    	
         //
         // Parse command line arguments.
         //
@@ -231,6 +240,14 @@ public class RunqueueTester {
 
                 // process the operations
                 processOperations(inReader, queue, outWriter);
+                
+                double result = 0;
+                for (int i = 0; i < timeArray.size(); i++) {
+                	result += timeArray.get(i);
+                }
+                result = result / timeArray.size();
+                System.out.println("Number of operations: " + timeArray.size());
+                System.out.println("Average time: " + result);
             }
             catch (FileNotFoundException ex) {
                 System.err.println("One of the specified files not found.");
