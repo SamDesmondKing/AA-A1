@@ -82,11 +82,11 @@ public class RunqueueTester {
                             }
                             else {
                             	//Timer here
-                            	long startTime = System.nanoTime();
+                            	//long startTime = System.nanoTime();
                                 queue.enqueue(tokens[1], vt);
-                                long endTime = System.nanoTime();
-                                double time = ((double) (endTime - startTime)) / Math.pow(10,9);
-                                timeArray.add(time);
+                                //long endTime = System.nanoTime();
+                                //double time = ((double) (endTime - startTime)) / Math.pow(10,6);
+                                //timeArray.add(time);
                             }
                         }
                         else {
@@ -97,8 +97,13 @@ public class RunqueueTester {
                     // remove highest priority process from the queue
                     case "DE":
                         if (tokens.length == 1) {
+                        	//Timer here
+                        	long startTime = System.nanoTime();
                             String procName = queue.dequeue();
-				    		processOutWriter.println(procName);
+                            processOutWriter.println(procName);
+                            long endTime = System.nanoTime();
+                            double time = ((double) (endTime - startTime)) / Math.pow(10,6);
+                            timeArray.add(time);
                         }
                         else {
                             System.err.println(lineNum + ": incorrect number of tokens.");
@@ -130,7 +135,12 @@ public class RunqueueTester {
                     // calculate preceding processes vt
                     case "PT":
                         if (tokens.length == 2) {
+                        	//Timer here
+                        	//long startTime = System.nanoTime();
                             int value = queue.precedingProcessTime(tokens[1]);
+                            //long endTime = System.nanoTime();
+                            //double time = ((double) (endTime - startTime)) / Math.pow(10,6);
+                            //timeArray.add(time);
 				            processOutWriter.println(value);
                         }
                         else {
@@ -241,13 +251,11 @@ public class RunqueueTester {
                 // process the operations
                 processOperations(inReader, queue, outWriter);
                 
-                double result = 0;
-                for (int i = 0; i < timeArray.size(); i++) {
-                	result += timeArray.get(i);
-                }
-                result = result / timeArray.size();
-                System.out.println("Number of operations: " + timeArray.size());
-                System.out.println("Average time: " + result);
+                //Print test results
+                //EN_Test();
+                DE_Test();
+                //PT_Test();
+                
             }
             catch (FileNotFoundException ex) {
                 System.err.println("One of the specified files not found.");
@@ -271,5 +279,43 @@ public class RunqueueTester {
         } // end of else
 
     } // end of main()
+    
+    
+    public static void EN_Test() {
+    	int queueSize = 1000;
+        double result = 0;
+        int j = 0;
+        for (int i = queueSize; i < timeArray.size(); i++) {
+        	result += timeArray.get(i);
+        	j++;
+        }
+        result = result / timeArray.size();
+        System.out.println("Number of operations: " + j);
+        System.out.println("Average time: " + result);
+    }
+    
+    public static void DE_Test() {
+        double result = 0;
+        int j = 0;
+        for (int i = 0; i < timeArray.size(); i++) {
+        	result += timeArray.get(i);
+        	j++;
+        }
+        result = result / timeArray.size();
+        System.out.println("Number of operations: " + j);
+        System.out.println("Average time: " + result);
+    }
+    
+    public static void PT_Test() {
+        double result = 0;
+        int j = 0;
+        for (int i = 0; i < timeArray.size(); i++) {
+        	result += timeArray.get(i);
+        	j++;
+        }
+        result = result / timeArray.size();
+        System.out.println("Number of operations: " + j);
+        System.out.println("Average time: " + result);
+    }
 
 } // end of class RunqueueTester
